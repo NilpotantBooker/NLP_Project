@@ -11,7 +11,8 @@ TEMPLATES = {
     "CoT":       'After thinking step by step , this sentence : "{sent}" means in one word: "',
     "KE":        'The essence of a sentence is often captured by its main subjects and actions, '
                  'while descriptive terms provide additional but less central details. '
-                 'With this in mind , this sentence : "{sent}" means in one word: "'
+                 'With this in mind , this sentence : "{sent}" means in one word: "',
+    "IntentFocus": 'The primary intent or main point of the sentence "{sent}", if summarized into one word, would be: "'
 }
 
 
@@ -35,6 +36,13 @@ class OneTokenCompressor:
         )
         if device:
             self.model.to(device)
+        else:  # Try to use CUDA if available, otherwise stick to CPU
+            if torch.cuda.is_available():
+                self.model.to("cuda")
+            elif torch.backends.mps.is_available():  # For Apple Silicon
+                self.model.to("mps")
+            else:
+                self.model.to("cpu")
         self.model.eval()
 
     @torch.inference_mode()

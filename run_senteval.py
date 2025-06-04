@@ -5,7 +5,7 @@ from prompt_encoders import build_senteval_interface
 
 # ------------------------------ 参数 ------------------------------------ #
 parser = argparse.ArgumentParser()
-parser.add_argument("--encoder", choices=["PromptEOL", "CoT", "KE"],
+parser.add_argument("--encoder", choices=["PromptEOL", "CoT", "KE", "IntentFocus"],
                     default="PromptEOL", help="选择提示模板")
 parser.add_argument("--model", default="Qwen/Qwen2-7B-Instruct",
                     help="HF 模型名或本地路径")
