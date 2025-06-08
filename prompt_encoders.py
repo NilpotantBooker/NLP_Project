@@ -13,7 +13,6 @@ TEMPLATES = {
                  'while descriptive terms provide additional but less central details. '
                  'With this in mind , this sentence : "{sent}" means in one word: "',
     "DistillCore": 'Distill the absolute core meaning of the sentence: "{sent}" into a single, most representative word: "'
-
 }
 
 
