@@ -11,10 +11,12 @@ Classifiers include Logistic Regression and MLP
 """
 
 from __future__ import absolute_import, division, unicode_literals
-
+import sys
 import numpy as np
 import copy
 
+PATH_TO_SENTEVAL = '../../'
+sys.path.insert(0, PATH_TO_SENTEVAL)
 from SentEval.senteval import utils as utils
 
 import torch

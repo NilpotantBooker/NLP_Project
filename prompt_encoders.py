@@ -11,7 +11,8 @@ TEMPLATES = {
     "CoT":       'After thinking step by step , this sentence : "{sent}" means in one word: "',
     "KE":        'The essence of a sentence is often captured by its main subjects and actions, '
                  'while descriptive terms provide additional but less central details. '
-                 'With this in mind , this sentence : "{sent}" means in one word: "'
+                 'With this in mind , this sentence : "{sent}" means in one word: "',
+    "IntentFocus": 'The primary intent or main point of the sentence "{sent}", if summarized into one word, would be: "'
 }
 
 
@@ -22,10 +23,12 @@ class OneTokenCompressor:
     def __init__(self,
                  model_name: str = "Qwen/Qwen2-7B-Instruct",
                  prompt_style: str = "PromptEOL",
+                 layer_index: int = -1,
                  device: str = None):
         assert prompt_style in TEMPLATES, f"prompt_style must be one of {list(TEMPLATES)}"
         self.prompt_style = prompt_style
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+        self.layer_index = layer_index
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
             output_hidden_states=True,
@@ -35,15 +38,22 @@ class OneTokenCompressor:
         )
         if device:
             self.model.to(device)
+        else:  # Try to use CUDA if available, otherwise stick to CPU
+            if torch.cuda.is_available():
+                self.model.to("cuda")
+            elif torch.backends.mps.is_available():  # For Apple Silicon
+                self.model.to("mps")
+            else:
+                self.model.to("cpu")
         self.model.eval()
 
     @torch.inference_mode()
     def encode(self, sentences: List[str]) -> np.ndarray:
         """
-        ① 把每个句子填到模板
-        ② 前向传播得到隐藏层
-        ③ 取 **最末 token**（即将开始生成单词的位置）的指定层 hidden-state
-        ④ 返回 (batch, hidden_dim) numpy 向量
+        把每个句子填到模板
+        前向传播得到隐藏层
+        取 **最末 token**（即将开始生成单词的位置）的指定层 hidden-state
+        返回 (batch, hidden_dim) numpy 向量
         """
         prompts = [TEMPLATES[self.prompt_style].format(sent=s) for s in sentences]
         tokenized = self.tokenizer(
@@ -56,7 +66,7 @@ class OneTokenCompressor:
 
         outputs = self.model(**tokenized)
         # hidden_states: tuple(n_layers, batch, seq, dim)
-        hidden = outputs.hidden_states[-1]            # 最后一层，更抽象
+        hidden = outputs.hidden_states[self.layer_index]            # 最后一层
         attention_mask = tokenized["attention_mask"]
 
         # 找到每个样本的最后一个非 PAD 位置
@@ -66,19 +76,17 @@ class OneTokenCompressor:
         return vectors.float().cpu().numpy()
 
 
-# ---------- SentEval 接口封装 ------------------------------------------- #
-def build_senteval_interface(prompt_style: str, model_name: str):
+# SentEval 接口封装
+def build_senteval_interface(prompt_style: str, model_name: str, layer_index: int):
     """
     返回 prepare 与 batcher；二者将被 SentEval 调用
     """
-    encoder = OneTokenCompressor(model_name=model_name, prompt_style=prompt_style)
+    encoder = OneTokenCompressor(model_name=model_name, prompt_style=prompt_style , layer_index=layer_index)
 
     def prepare(params, samples):
-        # 可选：在这里提前做词表统计等——本例直接返回即可
         return
 
     def batcher(params, batch):
-        # batch 是 List[List[str]]；需转换成 List[str]
         sentences = [" ".join(s) if isinstance(s, list) else s for s in batch]
         return encoder.encode(sentences)
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ddd1e858-69f5-497b-ac85-f684f1b0dfc1" name="nlp_project">
+        <fileTransfer accessType="SFTP" host="ssh -p 31486 root@36.155.152.28" port="22" sshConfigId="b22e78e1-6af4-487b-a270-ef937d37c61b" sshConfig="&lt;username&gt;@ssh -p 31486 root@36.155.152.28:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

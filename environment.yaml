@@ -1,0 +1,19 @@
+name: qwen2-senteval-cpu
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pytorch>=2.2
+  - cpuonly          # 保证安装CPU版本的 PyTorch:contentReference[oaicite:13]{index=13}
+  - transformers>=4.40
+  - sentence-transformers
+  - huggingface_hub
+  - numpy
+  - scipy
+  - scikit-learn
+  - einops
+  - pip              # 使用 pip 安装额外依赖
+  - pip:
+      - git+https://github.com/facebookresearch/SentEval.git
