@@ -41,8 +41,13 @@ class STSEval(object):
             gs_scores = [float(x) for x in raw_scores[not_empty_idx]]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             sent1 = np.array([s.split() for s in sent1], dtype=object)[not_empty_idx]
             sent2 = np.array([s.split() for s in sent2], dtype=object)[not_empty_idx]
+=======
+            sent1 = np.array([s.split() for s in sent1],dtype=object)[not_empty_idx]
+            sent2 = np.array([s.split() for s in sent2],dtype=object)[not_empty_idx]
+>>>>>>> 7e5b20fc0770d4c75580248ba389bf747e7b2b3e
 =======
             sent1 = np.array([s.split() for s in sent1],dtype=object)[not_empty_idx]
             sent2 = np.array([s.split() for s in sent2],dtype=object)[not_empty_idx]

@@ -35,6 +35,7 @@ print(json.dumps(results, indent=2, ensure_ascii=False))
 
 
 
+
 # out_dir = "results"
 # os.makedirs(out_dir, exist_ok=True)
 # with open(os.path.join(out_dir, f"{args.prompt}.json"), "w", encoding="utf-8") as f:
