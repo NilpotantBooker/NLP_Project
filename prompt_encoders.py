@@ -12,7 +12,8 @@ TEMPLATES = {
     "KE":        'The essence of a sentence is often captured by its main subjects and actions, '
                  'while descriptive terms provide additional but less central details. '
                  'With this in mind , this sentence : "{sent}" means in one word: "',
-    "IntentFocus": 'The primary intent or main point of the sentence "{sent}", if summarized into one word, would be: "'
+    "DistillCore": 'Distill the absolute core meaning of the sentence: "{sent}" into a single, most representative word: "'
+
 }
 
 

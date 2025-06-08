@@ -5,7 +5,7 @@ from prompt_encoders import build_senteval_interface
 
 # 参数
 parser = argparse.ArgumentParser()
-parser.add_argument("--encoder", choices=["PromptEOL", "CoT", "KE", "IntentFocus"],
+parser.add_argument("--encoder", choices=["PromptEOL", "CoT", "KE", "DistillCore"],
                     default="PromptEOL", help="选择提示模板")
 parser.add_argument("--model", default="Qwen/Qwen2-7B-Instruct",
                     help="HF 模型名或本地路径")
@@ -33,7 +33,9 @@ results = se.eval(args.tasks)
 print(json.dumps(results, indent=2, ensure_ascii=False))
 
 
+
 # out_dir = "results"
 # os.makedirs(out_dir, exist_ok=True)
 # with open(os.path.join(out_dir, f"{args.prompt}.json"), "w", encoding="utf-8") as f:
 #     json.dump(results, f, indent=2, ensure_ascii=False)
+
